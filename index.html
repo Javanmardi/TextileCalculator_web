@@ -3,8 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/png" href="parsianik.png">
 <title>ماشین حساب نساجی (پارسیانیک)</title>
+<meta name="theme-color" content="#17263C">
+<meta name="description" content="ماشین حساب نساجی گروه پارسیانیک">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/parsianik-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/parsianik-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/parsianik-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -414,7 +419,7 @@ html, body {
             <!-- <line x1="17" y1="5" x2="17" y2="17" stroke="white" stroke-width="1.6"/> -->
           <!-- </svg> -->
 		  <!-- Parsianik logo -->
-		  <img src="parsianik.png" alt="Parsianik">
+		  <img src="icons/parsianik-512.png" alt="Parsianik">
         </div>
         <div>
           <div class="brand-name">ماشین حساب نساجی</div>
@@ -580,9 +585,9 @@ const DATA = [
       unit: 'گرم/متر²',
       inputs: [
         { id:'tpp', label:'تراکم پود' },
-		{ id:'pnn', label:'نمره پود' },
-		{ id:'ttt', label:'تراکم تار' },
         { id:'tnn', label:'نمره تار' },
+        { id:'pnn', label:'نمره پود' },
+        { id:'ttt', label:'تراکم تار' },
       ],
       calc: v => (v.tpp * v.pnn / 9000) * (v.ttt * v.tnn / 9000) * 1.05
     },
