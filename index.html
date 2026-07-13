@@ -396,6 +396,27 @@ html, body {
 </style>
 </head>
 <body>
+/* ── PWA Install Banner ─────────────────────── */
+<div id="install-banner" style="
+  display:none; position:fixed; bottom:0; left:0; right:0;
+  background:#17263C; color:#fff; padding:14px 18px;
+  align-items:center; justify-content:space-between;
+  gap:12px; z-index:999; font-family:Vazirmatn,sans-serif;
+  font-size:13px; border-top:2px solid #C17826;">
+  <span>📲 این ابزار را روی گوشی نصب کنید</span>
+  <div style="display:flex;gap:8px;flex-shrink:0;">
+    <button id="install-btn" style="
+      background:#C17826; color:#fff; border:none;
+      border-radius:6px; padding:7px 14px; font-family:Vazirmatn,sans-serif;
+      font-size:13px; font-weight:700; cursor:pointer;">نصب</button>
+    <button id="install-dismiss" style="
+      background:transparent; color:rgba(255,255,255,.6);
+      border:1px solid rgba(255,255,255,.2); border-radius:6px;
+      padding:7px 10px; font-family:Vazirmatn,sans-serif;
+      font-size:12px; cursor:pointer;">بعداً</button>
+  </div>
+</div>
+
 <div class="app">
 
   <!-- Mobile-only: hamburger toggle -->
@@ -443,6 +464,32 @@ html, body {
 </div><!-- .app -->
 
 <script>
+// ═══════════════════════════════════════════════
+//  PWA INSTALL PROMPT
+// ═══════════════════════════════════════════════
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Show your custom banner
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.style.display = 'flex';
+});
+
+document.getElementById('install-btn')?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').style.display = 'none';
+});
+
+document.getElementById('install-dismiss')?.addEventListener('click', () => {
+  document.getElementById('install-banner').style.display = 'none';
+});
+
 // ═══════════════════════════════════════════════
 //  FORMULA DATA
 //  Each formula matches the Python source exactly.
