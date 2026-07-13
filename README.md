@@ -82,30 +82,6 @@ textile-calculator-web/
 
 ---
 
-## Deployment
-
-The entire application is a single HTML file. To deploy:
-
-1. Go to [pages.cloudflare.com](https://pages.cloudflare.com)
-2. Create a project → Direct Upload
-3. Upload `textile_calculator.html`
-4. Done — Cloudflare provides a permanent public URL
-
-To update, upload a new version of the file. No build pipeline needed.
-
----
-
-## Embedding in Google Sites
-
-1. Deploy to Cloudflare Pages as above
-2. In Google Sites → Insert → Embed → By URL
-3. Paste the Cloudflare Pages URL
-4. Resize the iframe to fit your page layout
-
-> Note: Google Sites strips JavaScript from pasted HTML directly. The iframe embed method is required.
-
----
-
 ## Customization
 
 | What | Where in the file |
@@ -151,8 +127,6 @@ This project replaces the archived Python/Tkinter desktop version:
 ## License
 
 Licensed under the [Apache 2.0 License](LICENSE).
-
-The Apache 2.0 license was chosen over MIT to include explicit patent protection, anticipating that future formulas added to this tool may constitute proprietary methods developed by Parsianik Group.
 
 ---
 
