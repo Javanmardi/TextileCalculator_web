@@ -82,28 +82,6 @@ textile-calculator-web/
 
 ---
 
-## استقرار روی Cloudflare Pages
-
-۱. به [pages.cloudflare.com](https://pages.cloudflare.com) بروید
-۲. یک پروژه جدید بسازید → Direct Upload
-۳. فایل `textile_calculator.html` را آپلود کنید
-۴. تمام — Cloudflare یک آدرس دائمی عمومی می‌دهد
-
-برای به‌روزرسانی، کافی است نسخه جدید فایل را آپلود کنید. نیازی به Pipeline نیست.
-
----
-
-## تعبیه در Google Sites
-
-۱. ابتدا فایل را روی Cloudflare Pages مستقر کنید
-۲. در Google Sites → Insert → Embed → By URL
-۳. آدرس Cloudflare Pages را وارد کنید
-۴. اندازه iframe را تنظیم کنید
-
-> توجه: Google Sites کدهای JavaScript را از HTML مستقیم حذف می‌کند. روش iframe تنها راه صحیح است.
-
----
-
 ## سفارشی‌سازی
 
 | چه چیزی | کجا در فایل |
@@ -150,7 +128,6 @@ textile-calculator-web/
 
 این پروژه تحت مجوز [Apache 2.0](LICENSE) منتشر شده است.
 
-مجوز Apache 2.0 به جای MIT انتخاب شد تا حمایت صریح از حق اختراع را شامل شود، با توجه به اینکه فرمول‌های آینده ممکن است روش‌های اختصاصی توسعه‌یافته توسط گروه پارسیانیک باشند.
 
 ---
 
