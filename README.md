@@ -1,10 +1,10 @@
-[🇮🇷 نسخه فارسی](WEB-README.fa.md)
+[🇮🇷 نسخه فارسی](README.fa.md)
 
 # Textile Calculator — Web Version
 
 A browser-based calculation tool for the textile manufacturing industry, developed by **Parsianik Group**. Built as a single self-contained HTML file with no frameworks, no build step, and no dependencies beyond a Google Fonts stylesheet.
 
-🌐 **Live:** [https://calc.parsianik.com/](https://calc.parsianik.com/) 
+🌐 **Live:** [calc.parsianik.com](https://calc.parsianik.com/) 
 
 ---
 
