@@ -1,10 +1,10 @@
-[🇬🇧 English Version](WEB-README.md)
+[🇬🇧 English Version](README.md)
 
 # ماشین حساب نساجی — نسخه وب
 
 ابزار محاسباتی مبتنی بر مرورگر برای صنعت نساجی، توسعه‌یافته توسط گروه **پارسیانیک**. این پروژه به صورت یک فایل HTML خودکفا نوشته شده، بدون فریم‌ورک، بدون مرحله Build، و بدون وابستگی خارجی به جز فونت Vazirmatn.
 
-🌐 **آدرس زنده:** [calc.parsianik.com](https://calc.parsianik.com) *(آدرس Cloudflare Pages خود را جایگزین کنید)*
+🌐 **آدرس زنده:** [calc.parsianik.com](https://calc.parsianik.com) 
 
 ---
 
