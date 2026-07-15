@@ -120,7 +120,7 @@ The sidebar nav and formula card are generated automatically — no other change
 ## Predecessor
 
 This project replaces the archived Python/Tkinter desktop version:
-👉 [TextileCalculator_python](https://github.com/Javanmardi/TextileCalculator_python)
+👉 [TextileCalculator_python](../TextileCalculator_python)
 
 ---
 
