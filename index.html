@@ -403,7 +403,7 @@ html, body {
   align-items:center; justify-content:space-between;
   gap:12px; z-index:999; font-family:Vazirmatn,sans-serif;
   font-size:13px; border-top:2px solid #C17826;">
-  <span>📲 این ابزار را روی گوشی نصب کنید</span>
+  <span>📲 این ابزار را نصب کنید</span>
   <div style="display:flex;gap:8px;flex-shrink:0;">
     <button id="install-btn" style="
       background:#C17826; color:#fff; border:none;
@@ -655,6 +655,31 @@ const DATA = [
         { id:'tntn', label:'تعداد سرنخ کل' },
       ],
       calc: v => Math.floor(v.tntn / (Math.floor(v.tntn / v.scc) + 1))
+    },
+  ]},
+  /* ── تافتینگ ── */
+  { title: 'تافتینگ', formulas: [
+
+    { title: 'وزن بافته شده تافتینگ کات',
+      unit: 'گرم/مترمربع',
+      inputs: [
+        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' },
+        { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
+        { id:'pile', label:'طول پایل (میلی‌متر)' },
+        { id:'den', label:'نمره نخ (دنیر)' },
+      ],
+      calc: v => (1/v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (100/v.stitch)) * 0.001 * (v.den / 9000)
+    },
+
+    { title: 'وزن بافته شده تافتینگ کات',
+      unit: 'گرم/مترمربع',
+      inputs: [
+        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' },
+        { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
+        { id:'pile', label:'طول پایل (میلی‌متر)' },
+        { id:'den', label:'نمره نخ (دنیر)' },
+      ],
+      calc: v => (1/v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (200/v.stitch)) * 0.001 * (v.den / 9000)
     },
   ]},
 ];
