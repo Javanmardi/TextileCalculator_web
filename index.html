@@ -631,9 +631,9 @@ const DATA = [
     { title: 'وزن گرد بر',
       unit: 'گرم/متر²',
       inputs: [
+        { id:'pnn', label:'نمره پود' },
         { id:'tpp', label:'تراکم پود' },
         { id:'tnn', label:'نمره تار' },
-        { id:'pnn', label:'نمره پود' },
         { id:'ttt', label:'تراکم تار' },
       ],
       calc: v => (v.tpp * v.pnn / 9000) * (v.ttt * v.tnn / 9000) * 1.05
