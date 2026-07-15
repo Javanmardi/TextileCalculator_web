@@ -10,7 +10,7 @@ A browser-based calculation tool for the textile manufacturing industry, develop
 
 ## Features
 
-- 15 formulas across 4 production process categories
+- Categorize formulas across production processes
 - RTL Farsi interface with Vazirmatn font
 - Responsive layout — permanent sidebar on desktop, slide-in drawer on mobile
 - Hamburger menu with animated open/close on screens ≤ 720px
