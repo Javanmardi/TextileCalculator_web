@@ -251,6 +251,12 @@ html, body {
 }
 .inp.err { border-color: var(--error); background: #fff8f8; }
 
+select.inp {
+  cursor: pointer;
+  direction: rtl;
+  text-align: right;
+}
+
 /* ── Calculate button ─────────────────── */
 .calc-btn {
   display: block;
@@ -499,20 +505,20 @@ const DATA = [
   /* ── ذوب ریسی ── */
   { title: 'ذوب ریسی', formulas: [
 
-    { title: 'وزن تئوری تولید در دقیقه',
+    { title: 'محاسبه مقدار تولید در دقیقه',
       unit: 'گرم/دقیقه',
       inputs: [
         { id:'v',  label:'سرعت (متر/دقیقه)' },
-        { id:'n',  label:'تعداد سر نخ' },
+        { id:'n',  label:'تعداد سر نخ/پوزیشن' },
         { id:'d',  label:'نمره به دنیر' },
       ],
       calc: v => (v.d * v.n * v.v) / 900000
     },
 
-    { title: 'وزن تئوری تولید در زمان فعالیت',
+    { title: 'محاسبه مقدار تولید در زمان فعالیت',
       unit: 'گرم',
       inputs: [
-        { id:'tm', label:'وزن تئوری تولید در دقیقه (گرم/دقیقه)' },
+        { id:'tm', label:'مقدار تولید در دقیقه (گرم/دقیقه)' },
         { id:'wt', label:'زمان کارکرد ماشین (دقیقه)' },
       ],
       calc: v => v.tm * v.wt
@@ -525,7 +531,7 @@ const DATA = [
         { id:'chw', label:'وزن چیپس' },
         { id:'op',  label:'درصد روغن' },
       ],
-      calc: v => v.chw + (v.mp * v.chw) + (v.chw + v.op) / 10000
+      calc: v => v.chw + ((v.mp/100) * v.chw) + ((v.chw/100) + v.op) / 10000
     },
 
     { title: 'تعداد بوبین کامل تئوری',
@@ -552,7 +558,7 @@ const DATA = [
         { id:'wap', label:'وزن محصول نهایی واقعی' },
         { id:'wta', label:'وزن تئوری تولید در زمان فعالیت' },
       ],
-      calc: v => v.wap / v.wta
+      calc: v => (v.wap / v.wta) * 100
     },
   ]},
 
@@ -596,10 +602,10 @@ const DATA = [
     { title: 'راندمان کیفی (%)',
       unit: '%',
       inputs: [
-        { id:'rta',  label:'میزان نخ تولید شده واقعی (کیلوگرم)' },
+        { id:'rta',  label:'میزان نخ کل تولید (کیلوگرم)' },
         { id:'adqp', label:'میزان درجات کیفی تولید شده (کیلوگرم)' },
       ],
-      calc: v => 100 - ((v.adqp / v.rta) * 100)
+      calc: v => (v.adqp / v.rta) * 100
     },
   ]},
 
@@ -629,12 +635,12 @@ const DATA = [
   { title: 'بافندگی', formulas: [
 
     { title: 'وزن گرد بر',
-      unit: 'گرم/متر²',
+      unit: 'گرم/دسی‌متر²',
       inputs: [
-        { id:'pnn', label:'نمره پود' },
-        { id:'tpp', label:'تراکم پود' },
-        { id:'tnn', label:'نمره تار' },
-        { id:'ttt', label:'تراکم تار' },
+        { id:'tnn', label:'نمره تار (دنیر)' },
+        { id:'ttt', label:'تراکم تار (در سانتی‌متر)' },
+        { id:'pnn', label:'نمره پود (دنیر)' },
+        { id:'tpp', label:'تراکم پود (در سانتی‌متر)' },
       ],
       calc: v => (v.tpp * v.pnn / 9000) * (v.ttt * v.tnn / 9000) * 1.05
     },
@@ -663,7 +669,19 @@ const DATA = [
     { title: 'وزن بافته شده تافتینگ کات',
       unit: 'گرم/مترمربع',
       inputs: [
-        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' },
+        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' }, --*/ /*-- Decimal gauge only --*/
+        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
+        { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select',
+          options: [
+            { label:'۵/۶۴',  value: 64/5 },
+            { label:'۱/۱۰',  value: 10 },
+            { label:'۱/۸',  value: 8 },
+            { label:'۵/۳۲', value: 32/5 },
+            { label:'۳/۱۶', value: 16/3 },
+            { label:'۵/۱۶', value: 16/5 },
+            { label:'۵/۸', value: 8/5 },
+          ]
+        },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
@@ -674,7 +692,15 @@ const DATA = [
     { title: 'وزن بافته شده تافتینگ لوپ',
       unit: 'گرم/مترمربع',
       inputs: [
-        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' },
+        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' }, --*/ /*-- Decimal gauge only --*/
+        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
+        { label:'۵/۶۴',  value: 64/5 },
+        { label:'۱/۱۰',  value: 10 },
+        { label:'۱/۸',  value: 8 },
+        { label:'۵/۳۲', value: 32/5 },
+        { label:'۳/۱۶', value: 16/3 },
+        { label:'۵/۱۶', value: 16/5 },
+        { label:'۵/۸', value: 8/5 },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
@@ -744,8 +770,13 @@ function renderCard(catTitle, formula) {
     ${formula.inputs.map(inp => `
       <div class="inp-row">
         <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
-        <input class="inp" id="${inp.id}" type="number" step="any"
-               placeholder="0" autocomplete="off" inputmode="decimal">
+        ${inp.type === 'select'
+          ? `<select class="inp" id="${inp.id}">
+               ${inp.options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+             </select>`
+          : `<input class="inp" id="${inp.id}" type="number" step="any"
+                     placeholder="0" autocomplete="off" inputmode="decimal">`
+        }
       </div>
     `).join('')}
     <button class="calc-btn" id="calc-btn">محاسبه</button>
@@ -756,6 +787,23 @@ function renderCard(catTitle, formula) {
       <span class="res-unit">${formula.unit}</span>
     </div>
   `;
+  // Decimal gauge only
+  // ${formula.inputs.map(inp => `
+  //   <div class="inp-row">
+  //     <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+  //     <input class="inp" id="${inp.id}" type="number" step="any"
+  //            placeholder="0" autocomplete="off" inputmode="decimal">
+  //
+  // Fraction gauge
+  // ${formula.inputs.map(inp => `
+  //   <div class="inp-row">
+  //     <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+  //     ${inp.type === 'fraction'
+  //       ? `<input class="inp" id="${inp.id}" type="text"
+  //                  placeholder="1/8" autocomplete="off">`
+  //       : `<input class="inp" id="${inp.id}" type="number" step="any"
+  //                  placeholder="0" autocomplete="off" inputmode="decimal">`
+  //     }
 
   main.appendChild(card);
 
