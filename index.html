@@ -673,20 +673,20 @@ const DATA = [
         /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
         { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select',
           options: [
-            { label:'۵/۶۴',  value: 64/5 },
-            { label:'۱/۱۰',  value: 10 },
-            { label:'۱/۸',  value: 8 },
-            { label:'۵/۳۲', value: 32/5 },
-            { label:'۳/۱۶', value: 16/3 },
-            { label:'۵/۱۶', value: 16/5 },
-            { label:'۵/۸', value: 8/5 },
+            { label:'۵/۶۴',  value: 5/64 },
+            { label:'۱/۱۰',  value: 1/10 },
+            { label:'۱/۸',  value: 1/8 },
+            { label:'۵/۳۲', value: 5/32 },
+            { label:'۳/۱۶', value: 3/16 },
+            { label:'۵/۱۶', value: 5/16 },
+            { label:'۵/۸', value: 5/8 },
           ]
         },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
       ],
-      calc: v => (v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (100/v.stitch)) * 0.001 * (v.den / 9000)
+      calc: v => (1/v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (100/v.stitch)) * 0.001 * (v.den / 9000)
     },
 
     { title: 'وزن بافته شده تافتینگ لوپ',
@@ -694,18 +694,18 @@ const DATA = [
       inputs: [
         /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' }, --*/ /*-- Decimal gauge only --*/
         /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
-        { label:'۵/۶۴',  value: 64/5 },
-        { label:'۱/۱۰',  value: 10 },
-        { label:'۱/۸',  value: 8 },
-        { label:'۵/۳۲', value: 32/5 },
-        { label:'۳/۱۶', value: 16/3 },
-        { label:'۵/۱۶', value: 16/5 },
-        { label:'۵/۸', value: 8/5 },
+        { label:'۵/۶۴',  value: 5/64 },
+        { label:'۱/۱۰',  value: 1/10 },
+        { label:'۱/۸',  value: 1/8 },
+        { label:'۵/۳۲', value: 5/32 },
+        { label:'۳/۱۶', value: 3/16 },
+        { label:'۵/۱۶', value: 5/16 },
+        { label:'۵/۸', value: 5/8 },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
       ],
-      calc: v => (v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (200/v.stitch)) * 0.001 * (v.den / 9000)
+      calc: v => (1/v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (200/v.stitch)) * 0.001 * (v.den / 9000)
     },
   ]},
 ];
