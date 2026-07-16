@@ -582,8 +582,8 @@ const DATA = [
         { id:'tin', label:'نمره نخ ورودی (دسی تکس)' },
         { id:'vr',  label:'نسبت کشش' },
         { id:'orv', label:'درصد روغن (%)' },
-        { id:'fvp', label:'درصد تغذیه کش' },
-        { id:'vn',  label:'نمره کش' },
+        { id:'fvp', label:'درصد تغذیه کش', default: 0, placeholder: '0 (اختیاری)' },
+        { id:'vn',  label:'نمره کش', default: 0, placeholder: '0 (اختیاری)' },
       ],
       calc: v => ((v.tin * 0.9) / v.vr)
                + ((v.orv / 100) * (v.tin / v.vr))
@@ -779,7 +779,7 @@ function renderCard(catTitle, formula) {
                ${inp.options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
              </select>`
           : `<input class="inp" id="${inp.id}" type="number" step="any"
-                     placeholder="0" autocomplete="off" inputmode="decimal">`
+                     placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
         }
       </div>
     `).join('')}
@@ -796,7 +796,7 @@ function renderCard(catTitle, formula) {
   //   <div class="inp-row">
   //     <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
   //     <input class="inp" id="${inp.id}" type="number" step="any"
-  //            placeholder="0" autocomplete="off" inputmode="decimal">
+  //            placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">
   //
   // Fraction gauge
   // ${formula.inputs.map(inp => `
@@ -806,7 +806,7 @@ function renderCard(catTitle, formula) {
   //       ? `<input class="inp" id="${inp.id}" type="text"
   //                  placeholder="1/8" autocomplete="off">`
   //       : `<input class="inp" id="${inp.id}" type="number" step="any"
-  //                  placeholder="0" autocomplete="off" inputmode="decimal">`
+  //                  placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
   //     }
 
   main.appendChild(card);
@@ -841,7 +841,17 @@ function calculate() {
   let valid = true;
   current.inputs.forEach(inp => {
     const el  = document.getElementById(inp.id);
-    const num = parseFloat(el.value);
+    // const num = parseFloat(el.value);
+    const raw = el.value.trim();
+
+    let num;
+    if (raw === '' && inp.default !== undefined) {
+      num = inp.default;
+    } else if (inp.type === 'fraction') {
+      num = parseFraction(el.value);
+    } else {
+      num = parseFloat(el.value);
+    }
     if (isNaN(num)) {
       el.classList.add('err');
       valid = false;
