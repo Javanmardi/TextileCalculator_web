@@ -55,6 +55,14 @@ A browser-based calculation tool for the textile manufacturing industry, develop
 | Weight per linear meter (g/m) | Width, areal density |
 | Number of warp beam yarn ends | Creel capacity, total yarn ends |
 
+### 5. Tufting (تافتینگ)
+| Formula | Inputs |
+|---|---|
+| Machine gauge number | Gauge number per inch (number of niddles per inch)  |
+| Stitch number | Number of stitches per decimeter |
+| Pile length | Pile length (centimeter) |
+| Yarn count | Yarn count (denier) |
+
 ---
 
 ## Tech Stack
