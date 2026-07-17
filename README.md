@@ -2,7 +2,7 @@
 
 # Textile Calculator — Web Version
 
-A browser-based calculation tool for the textile manufacturing industry, developed by **Parsianik Group**. Built as a single self-contained HTML file with no frameworks, no build step, and no dependencies beyond a Google Fonts stylesheet.
+A browser-based calculation tool for the textile manufacturing industry, developed by **Parsianik Group**. Built as an HTML file with no frameworks, no build step, and no dependencies beyond a Google Fonts stylesheet.
 
 🌐 **Live:** [calc.parsianik.com](https://calc.parsianik.com/) 
 
