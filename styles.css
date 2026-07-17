@@ -1,0 +1,386 @@
+/* ═══════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:         #17263C;
+  --amber:        #C17826;
+  --amber-dk:     #A5631A;
+  --amber-lt:     #FDF3E3;
+  --amber-bd:     #DFA540;
+  --linen:        #ECEAE2;
+  --white:        #FFFFFF;
+  --border:       #D3CEC5;
+  --text:         #1A1A1A;
+  --mid:          #47423D;
+  --muted:        #7A756D;
+  --s-text:       rgba(255,255,255,0.87);
+  --s-dim:        rgba(255,255,255,0.40);
+  --s-hover:      rgba(255,255,255,0.07);
+  --s-active:     rgba(193,120,38,0.22);
+  --error:        #B53232;
+  --sw: 270px;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Vazirmatn', sans-serif;
+  background: var(--linen);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════ */
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR
+   Signature element: repeating diagonal
+   thread lines on the navy background,
+   evoking the look of woven fabric.
+═══════════════════════════════════════════ */
+.sidebar {
+  width: var(--sw);
+  flex-shrink: 0;
+  background: var(--navy);
+  background-image: repeating-linear-gradient(
+    -56deg,
+    transparent 0px,     transparent 9px,
+    rgba(255,255,255,.03) 9px, rgba(255,255,255,.03) 10px
+  );
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.12) transparent;
+}
+.sidebar::-webkit-scrollbar       { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); }
+
+/* Brand header */
+.s-head {
+  padding: 22px 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.brand-mark {
+  width: 37px;
+  height: 37px;
+  background: var(--bg-primary);
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+<!-- .brand-mark svg { width: 21px; height: 21px; } -->
+.brand-mark img { width: 31px; height: 31px; }
+.brand-name { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
+.brand-sub  { font-size: 10.5px; color: var(--s-dim); margin-top: 3px; }
+
+/* Nav */
+#nav { flex: 1; padding: 4px 0 20px; }
+
+.cat-sec { padding-top: 8px; }
+
+/* Category heading with trailing line */
+.cat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+  color: var(--amber);
+}
+.cat-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.07);
+}
+
+/* Formula buttons */
+.f-btn {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: none;
+  border: none;
+  border-right: 3px solid transparent;
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: 12.5px;
+  color: var(--s-text);
+  padding: 9px 14px 9px 12px;
+  cursor: pointer;
+  line-height: 1.45;
+  transition: background 0.1s;
+}
+.f-btn:hover { background: var(--s-hover); }
+.f-btn.active {
+  background: var(--s-active);
+  color: #fff;
+  font-weight: 600;
+  border-right-color: var(--amber);
+}
+
+/* ═══════════════════════════════════════════
+   CONTENT AREA
+═══════════════════════════════════════════ */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 48px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.content::-webkit-scrollbar       { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Welcome / idle state */
+.welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+}
+.welcome-glyph { font-size: 56px; opacity: .15; line-height: 1; margin-bottom: 6px; }
+.welcome h2 { font-size: 17px; font-weight: 600; color: var(--mid); opacity: .65; }
+.welcome p  { font-size: 13px; color: var(--muted); }
+.welcome h5 { position: fixed; bottom: 18px; left: 18px; font-size: 11px; font-weight: 400; color: var(--muted);}
+
+/* ── Formula card ─────────────────────── */
+.f-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 32px 36px 36px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05), 0 8px 28px rgba(0,0,0,.05);
+  max-width: 520px;
+  width: 100%;
+}
+
+.f-tag {
+  display: inline-block;
+  padding: 3px 13px;
+  border-radius: 100px;
+  background: var(--amber-lt);
+  border: 1px solid var(--amber-bd);
+  color: var(--amber-dk);
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: .3px;
+}
+
+.f-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.55;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+
+/* ── Inputs ───────────────────────────── */
+.inp-row { margin-bottom: 15px; }
+
+.inp-lbl {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.inp {
+  width: 100%;
+  padding: 11px 14px;
+  background: #F6F4F0;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  direction: ltr;
+  text-align: left;
+  /* Remove spinner arrows */
+  -moz-appearance: textfield;
+  appearance: textfield;
+  transition: border-color .12s, box-shadow .12s, background .12s;
+}
+.inp::-webkit-inner-spin-button,
+.inp::-webkit-outer-spin-button { -webkit-appearance: none; }
+.inp::placeholder { color: #C5C1BB; }
+.inp:focus {
+  outline: none;
+  background: #fff;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(193,120,38,.13);
+}
+.inp.err { border-color: var(--error); background: #fff8f8; }
+
+select.inp {
+  cursor: pointer;
+  direction: rtl;
+  text-align: right;
+}
+
+/* ── Calculate button ─────────────────── */
+.calc-btn {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 13px;
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Vazirmatn', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: .4px;
+  transition: background .11s, transform .07s;
+}
+.calc-btn:hover  { background: var(--amber-dk); }
+.calc-btn:active { transform: scale(.985); }
+
+/* ── Error message ────────────────────── */
+.err-msg {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--error);
+  display: none;
+}
+.err-msg.show { display: block; }
+
+/* ── Result box ───────────────────────── */
+.res-box {
+  margin-top: 22px;
+  background: var(--amber-lt);
+  border: 1.5px solid var(--amber-bd);
+  border-radius: 10px;
+  padding: 16px 22px;
+  display: none;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+.res-box.show {
+  display: flex;
+  animation: fadeUp .22s ease;
+}
+
+.res-lbl  { font-size: 11.5px; font-weight: 500; color: var(--amber-dk); flex-shrink: 0; }
+.res-val  { font-size: 30px; font-weight: 800; color: var(--amber); flex: 1; }
+.res-unit { font-size: 12px; font-weight: 500; color: var(--amber-dk); opacity: .85; flex-shrink: 0; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ═══════════════════════════════════════════
+   HAMBURGER BUTTON — mobile only
+═══════════════════════════════════════════ */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 60;
+  width: 42px;
+  height: 42px;
+  background: var(--navy);
+  border: none;
+  border-radius: 9px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18);
+}
+.hamburger span {
+  display: block;
+  width: 19px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .22s ease, opacity .22s ease;
+}
+/* Morph into an X when the drawer is open */
+.hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ═══════════════════════════════════════════
+   OVERLAY — dim backdrop behind drawer
+═══════════════════════════════════════════ */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 45;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+.overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — narrow screens (drawer menu)
+═══════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .hamburger { display: flex; }
+
+  .app {
+    height: 100vh;
+  }
+
+  /* Sidebar becomes a fixed slide-in panel from the right */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 78vw;
+    max-width: 300px;
+    z-index: 50;
+    transform: translateX(100%);
+    transition: transform .25s ease;
+    box-shadow: -6px 0 24px rgba(0,0,0,.25);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .s-head { padding: 18px 16px 16px; }
+
+  .content {
+    width: 100%;
+    padding: 72px 18px 24px;
+  }
+  .f-card  { padding: 20px; max-width: 100%; border-radius: 10px; }
+  .f-title { font-size: 16px; margin-bottom: 20px; }
+}
