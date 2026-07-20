@@ -136,14 +136,16 @@ const DATA = [
   { title: 'بافندگی', formulas: [
 
     { title: 'وزن گرد بر',
-      unit: 'گرم/دسی‌متر²',
+      unit: 'گرم/دسی‌متر مربع',
       inputs: [
-        { id:'tnn', label:'نمره تار (دنیر)' },
-        { id:'ttt', label:'تراکم تار (در سانتی‌متر)' },
-        { id:'pnn', label:'نمره پود (دنیر)' },
-        { id:'tpp', label:'تراکم پود (در سانتی‌متر)' },
+        { id:'tnd', label:'نمره تار (دنیر)' },
+        { id:'ttt', label:'تراکم تار (در ۱۰ سانتی‌متر)' },
+        { id:'tts', label:'جمع شدگی تار (درصد)', default: 0, placeholder: '0 (اختیاری)' },
+        { id:'pnd', label:'نمره پود (دنیر)' },
+        { id:'ptt', label:'تراکم پود (در ۱۰ سانتی‌متر)' },
+        { id:'pts', label:'جمع شدگی پود (درصد)', default: 0, placeholder: '0 (اختیاری)' },
       ],
-      calc: v => (v.tpp * v.pnn / 9000) * (v.ttt * v.tnn / 9000) * 1.05
+      calc: v => ((v.tnd * v.ttt * ((v.tts + 100) / 100)) + (v.pnd * v.ptt * ((v.pts + 100) / 100))) / 9000
     },
 
     { title: 'وزن متر طول',
