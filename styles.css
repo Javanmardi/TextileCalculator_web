@@ -163,6 +163,7 @@ html, body {
   gap: 10px;
 }
 .welcome-glyph { font-size: 56px; opacity: .15; line-height: 1; margin-bottom: 6px; }
+.welcome h1 { font-size: 18px; font-weight: 600; color: var(--mid); opacity: .65; }
 .welcome h2 { font-size: 17px; font-weight: 600; color: var(--mid); opacity: .65; }
 .welcome p  { font-size: 13px; color: var(--muted); }
 .welcome h5 { position: fixed; bottom: 18px; left: 18px; font-size: 11px; font-weight: 400; color: var(--muted);}
