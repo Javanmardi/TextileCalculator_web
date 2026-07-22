@@ -42,7 +42,6 @@ function buildNav() {
 
     const head = document.createElement('div');
     head.className = 'cat-head';
-    // head.textContent = cat.title;
     head.innerHTML = `<span class="cat-chevron">▾</span><span class="cat-head-text">${cat.title}</span>`;
     head.addEventListener('click', () => {
       sec.classList.toggle('collapsed');
@@ -57,7 +56,6 @@ function buildNav() {
       btn.className = 'f-btn';
       btn.textContent = f.title;
       btn.addEventListener('click', () => select(btn, ci, fi));
-      // sec.appendChild(btn);
       body.appendChild(btn);
     });
 

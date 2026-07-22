@@ -86,7 +86,7 @@ html, body {
   justify-content: center;
 }
 <!-- .brand-mark svg { width: 21px; height: 21px; } -->
-.brand-mark img { width: 31px; height: 31px; }
+.brand-mark img { width: 37px; height: 37px; }
 .brand-name { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.3; }
 .brand-sub  { font-size: 10.5px; color: var(--s-dim); margin-top: 3px; }
 
