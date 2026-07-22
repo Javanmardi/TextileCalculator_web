@@ -334,18 +334,15 @@ function calculateRange(formula) {
     }
   });
 
-  // Collect + validate range inputs, falling back to defaults when left empty
+  // Collect + validate range inputs (placeholder is a visual hint only — a
+  // blank field is invalid, same as every other required input in the app)
   const minEl  = document.getElementById('range-min');
   const maxEl  = document.getElementById('range-max');
   const stepEl = document.getElementById('range-step');
 
-  const minRaw  = minEl.value.trim();
-  const maxRaw  = maxEl.value.trim();
-  const stepRaw = stepEl.value.trim();
-
-  const min  = minRaw  === '' ? formula.range.defaultMin  : parseFloat(minRaw);
-  const max  = maxRaw  === '' ? formula.range.defaultMax  : parseFloat(maxRaw);
-  const step = stepRaw === '' ? formula.range.defaultStep : parseFloat(stepRaw);
+  const min  = parseFloat(minEl.value);
+  const max  = parseFloat(maxEl.value);
+  const step = parseFloat(stepEl.value);
 
   [minEl, maxEl, stepEl].forEach(el => el.classList.remove('err'));
 
