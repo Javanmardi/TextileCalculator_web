@@ -119,23 +119,6 @@ function renderCard(catTitle, formula) {
       <span class="res-unit">${formula.unit}</span>
     </div>
   `;
-  // Decimal gauge only
-  // ${formula.inputs.map(inp => `
-  //   <div class="inp-row">
-  //     <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
-  //     <input class="inp" id="${inp.id}" type="number" step="any"
-  //            placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">
-  //
-  // Fraction gauge
-  // ${formula.inputs.map(inp => `
-  //   <div class="inp-row">
-  //     <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
-  //     ${inp.type === 'fraction'
-  //       ? `<input class="inp" id="${inp.id}" type="text"
-  //                  placeholder="1/8" autocomplete="off">`
-  //       : `<input class="inp" id="${inp.id}" type="number" step="any"
-  //                  placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
-  //     }
 
   main.appendChild(card);
 
@@ -281,15 +264,15 @@ function renderRangeCard(catTitle, formula) {
       <div class="range-row">
         <div class="range-field">
           <span class="range-field-lbl">از</span>
-          <input class="inp" id="range-min" type="number" step="any" value="${r.defaultMin}">
+          <input class="inp" id="range-min" type="number" step="any" placeholder="${r.defaultMin}">
         </div>
         <div class="range-field">
           <span class="range-field-lbl">تا</span>
-          <input class="inp" id="range-max" type="number" step="any" value="${r.defaultMax}">
+          <input class="inp" id="range-max" type="number" step="any" placeholder="${r.defaultMax}">
         </div>
         <div class="range-field">
           <span class="range-field-lbl">گام</span>
-          <input class="inp" id="range-step" type="number" step="any" value="${r.defaultStep}">
+          <input class="inp" id="range-step" type="number" step="any" placeholder="${r.defaultStep}">
         </div>
       </div>
     </div>
@@ -351,14 +334,18 @@ function calculateRange(formula) {
     }
   });
 
-  // Collect + validate range inputs
+  // Collect + validate range inputs, falling back to defaults when left empty
   const minEl  = document.getElementById('range-min');
   const maxEl  = document.getElementById('range-max');
   const stepEl = document.getElementById('range-step');
 
-  const min  = parseFloat(minEl.value);
-  const max  = parseFloat(maxEl.value);
-  const step = parseFloat(stepEl.value);
+  const minRaw  = minEl.value.trim();
+  const maxRaw  = maxEl.value.trim();
+  const stepRaw = stepEl.value.trim();
+
+  const min  = minRaw  === '' ? formula.range.defaultMin  : parseFloat(minRaw);
+  const max  = maxRaw  === '' ? formula.range.defaultMax  : parseFloat(maxRaw);
+  const step = stepRaw === '' ? formula.range.defaultStep : parseFloat(stepRaw);
 
   [minEl, maxEl, stepEl].forEach(el => el.classList.remove('err'));
 

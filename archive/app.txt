@@ -1,0 +1,31 @@
+  // Fixed gauge
+  ${formula.inputs.map(inp => `
+  <div class="inp-row">
+    <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+    ${inp.type === 'select'
+      ? `<select class="inp" id="${inp.id}">
+           ${inp.options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+         </select>`
+      : `<input class="inp" id="${inp.id}" type="number" step="any"
+                 placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
+    }
+  
+  
+  // Decimal gauge only
+  ${formula.inputs.map(inp => `
+    <div class="inp-row">
+      <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+      <input class="inp" id="${inp.id}" type="number" step="any"
+             placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">
+
+             
+  // Fraction gauge
+  ${formula.inputs.map(inp => `
+    <div class="inp-row">
+      <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+      ${inp.type === 'fraction'
+        ? `<input class="inp" id="${inp.id}" type="text"
+                   placeholder="1/8" autocomplete="off">`
+        : `<input class="inp" id="${inp.id}" type="number" step="any"
+                   placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
+      }
