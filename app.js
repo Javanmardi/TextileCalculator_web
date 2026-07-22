@@ -35,10 +35,12 @@ let current = null;
 // ═══════════════════════════════════════════════
 function buildNav() {
   const nav = document.getElementById('nav');
-  DATA.forEach((cat, ci) => {
+  const sections = [UNIT_CONVERTER_NAV, ...DATA]; // converter first, then formula categories
+
+  sections.forEach((cat, ci) => {
     const sec = document.createElement('div');
     sec.className = 'cat-sec';
-    if (ci !== 0) sec.classList.add('collapsed'); // only the first category starts open
+    if (ci !== 0) sec.classList.add('collapsed'); // only the first section starts open
 
     const head = document.createElement('div');
     head.className = 'cat-head';
@@ -51,11 +53,11 @@ function buildNav() {
     const body = document.createElement('div');
     body.className = 'cat-body';
 
-    cat.formulas.forEach((f, fi) => {
+    cat.formulas.forEach(f => {
       const btn = document.createElement('button');
       btn.className = 'f-btn';
       btn.textContent = f.title;
-      btn.addEventListener('click', () => select(btn, ci, fi));
+      btn.addEventListener('click', () => select(btn, cat.title, f));
       body.appendChild(btn);
     });
 
@@ -67,13 +69,18 @@ function buildNav() {
 // ═══════════════════════════════════════════════
 //  SELECT A FORMULA
 // ═══════════════════════════════════════════════
-function select(btn, ci, fi) {
+function select(btn, catTitle, formula) {
   document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  current = DATA[ci].formulas[fi];
-  renderCard(DATA[ci].title, current);
+  current = formula;
 
-  // On mobile, picking a formula should close the drawer
+  if (formula.type === 'converter') {
+    renderConverter(catTitle, formula);
+  } else {
+    renderCard(catTitle, formula);
+  }
+
+  // On mobile, picking an item should close the drawer
   if (window.innerWidth <= 720) closeDrawer();
 }
 
@@ -140,6 +147,98 @@ function renderCard(catTitle, formula) {
     const first = card.querySelector('.inp');
     if (first) first.focus();
   }, 40);
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER UNIT CONVERTER CARD
+//  One dropdown (source unit) + one number input +
+//  calculate button → a results table showing every
+//  other unit converted from the same value at once.
+// ═══════════════════════════════════════════════
+function renderConverter(catTitle, formula) {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'f-card';
+
+  card.innerHTML = `
+    <span class="f-tag">${catTitle}</span>
+    <h1 class="f-title">${formula.title}</h1>
+    <div class="inp-row">
+      <label class="inp-lbl" for="conv-unit">واحد ورودی</label>
+      <select class="inp" id="conv-unit">
+        ${UNITS.map(u => `<option value="${u.id}">${u.label}</option>`).join('')}
+      </select>
+    </div>
+    <div class="inp-row">
+      <label class="inp-lbl" for="conv-value">مقدار</label>
+      <input class="inp" id="conv-value" type="number" step="any"
+             placeholder="0" autocomplete="off" inputmode="decimal">
+    </div>
+    <button class="calc-btn" id="conv-calc-btn">محاسبه</button>
+    <p class="err-msg" id="conv-err-msg">لطفاً یک عدد بزرگ‌تر از صفر وارد کنید.</p>
+    <div class="conv-table-wrap" id="conv-table-wrap">
+      <table class="conv-table">
+        <thead>
+          <tr><th>واحد</th><th>مقدار</th></tr>
+        </thead>
+        <tbody id="conv-table-body"></tbody>
+      </table>
+    </div>
+  `;
+
+  main.appendChild(card);
+
+  document.getElementById('conv-calc-btn').addEventListener('click', calculateConversion);
+  card.querySelectorAll('.inp').forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') calculateConversion(); });
+  });
+
+  setTimeout(() => {
+    document.getElementById('conv-value').focus();
+  }, 40);
+}
+
+// ═══════════════════════════════════════════════
+//  CALCULATE UNIT CONVERSION
+// ═══════════════════════════════════════════════
+function calculateConversion() {
+  const unitEl  = document.getElementById('conv-unit');
+  const valueEl = document.getElementById('conv-value');
+  const errMsg  = document.getElementById('conv-err-msg');
+  const tblWrap = document.getElementById('conv-table-wrap');
+  const tbody   = document.getElementById('conv-table-body');
+
+  errMsg.classList.remove('show');
+  tblWrap.classList.remove('show');
+  valueEl.classList.remove('err');
+
+  const unit  = unitEl.value;
+  const value = parseFloat(valueEl.value);
+
+  // Ne and Nm are reciprocal (indirect) systems — zero or
+  // negative input would divide by zero, so both are rejected.
+  if (isNaN(value) || value <= 0) {
+    valueEl.classList.add('err');
+    errMsg.classList.add('show');
+    return;
+  }
+
+  const texValue = toTex(value, unit);
+
+  tbody.innerHTML = '';
+  UNITS.forEach(u => {
+    if (u.id === unit) return; // skip the source unit — already known
+    const result  = fromTex(texValue, u.id);
+    const display = Number.isInteger(result) ? result.toString() : result.toFixed(3);
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${u.label}</td><td>${display}</td>`;
+    tbody.appendChild(row);
+  });
+
+  void tblWrap.offsetWidth;
+  tblWrap.classList.add('show');
 }
 
 // ═══════════════════════════════════════════════
