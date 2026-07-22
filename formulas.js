@@ -1,4 +1,19 @@
 // ═══════════════════════════════════════════════
+//  SHARED GAUGE OPTIONS
+//  Used by all tufting formulas (forward + reverse)
+//  so the option list only needs to be edited in one place.
+// ═══════════════════════════════════════════════
+const GAUGE_OPTIONS = [
+  { label:'۵/۶۴', value: 5/64 },
+  { label:'۱/۱۰', value: 1/10 },
+  { label:'۱/۸',  value: 1/8 },
+  { label:'۵/۳۲', value: 5/32 },
+  { label:'۳/۱۶', value: 3/16 },
+  { label:'۵/۱۶', value: 5/16 },
+  { label:'۵/۸',  value: 5/8 },
+];
+
+// ═══════════════════════════════════════════════
 //  FORMULA DATA
 // ═══════════════════════════════════════════════
 const DATA = [
@@ -173,19 +188,7 @@ const DATA = [
     { title: 'وزن بافته شده تافتینگ کات',
       unit: 'گرم/مترمربع',
       inputs: [
-        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' }, --*/ /*-- Decimal gauge only --*/
-        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
-        { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select',
-          options: [
-            { label:'۵/۶۴',  value: 5/64 },
-            { label:'۱/۱۰',  value: 1/10 },
-            { label:'۱/۸',  value: 1/8 },
-            { label:'۵/۳۲', value: 5/32 },
-            { label:'۳/۱۶', value: 3/16 },
-            { label:'۵/۱۶', value: 5/16 },
-            { label:'۵/۸', value: 5/8 },
-          ]
-        },
+        { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select', options: GAUGE_OPTIONS },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
@@ -196,24 +199,50 @@ const DATA = [
     { title: 'وزن بافته شده تافتینگ لوپ',
       unit: 'گرم/مترمربع',
       inputs: [
-        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)' }, --*/ /*-- Decimal gauge only --*/
-        /*-- { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'fraction' }, --*/ /*-- Fraction gauge --*/
-        { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select',
-          options: [
-            { label:'۵/۶۴',  value: 5/64 },
-            { label:'۱/۱۰',  value: 1/10 },
-            { label:'۱/۸',  value: 1/8 },
-            { label:'۵/۳۲', value: 5/32 },
-            { label:'۳/۱۶', value: 3/16 },
-            { label:'۵/۱۶', value: 5/16 },
-            { label:'۵/۸', value: 5/8 },
-          ]
-        },
+        { id:'gauge', label:'گیج دستگاه (۱/اینچ)', type:'select', options: GAUGE_OPTIONS },
         { id:'stitch', label:'تعداد بخیه (بخیه/دسی‌متر)' },
         { id:'pile', label:'طول پایل (میلی‌متر)' },
         { id:'den', label:'نمره نخ (دنیر)' },
       ],
       calc: v => (1/v.gauge) * (1000/25.4) * v.stitch * 10 * ((v.pile * 2) + (200/v.stitch)) * 0.001 * (v.den / 9000)
+    },
+    
+    { title: 'محاسبه معکوس تافتینگ کات (بخیه از وزن)',
+      type: 'range',
+      unit: 'بخیه/دسی‌متر',
+      fixedInputs: [
+        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'select', options: GAUGE_OPTIONS },
+        { id:'weight', label:'وزن درخواستی (گرم/مترمربع)' },
+        { id:'den',    label:'نمره نخ (دنیر)' },
+      ],
+      range: {
+        id: 'pile',
+        label: 'بازه تغییرات ارتفاع پایل (میلی‌متر)',
+        defaultMin: 6, defaultMax: 12, defaultStep: 1
+      },
+      calc: (f, pile) => {
+        const A = (1/f.gauge) * (1000/25.4) * 10 * 0.001 * (f.den/9000);
+        return (f.weight - 100*A) / (2*A*pile);
+      }
+    },
+
+    { title: 'محاسبه معکوس تافتینگ لوپ (بخیه از وزن)',
+      type: 'range',
+      unit: 'بخیه/دسی‌متر',
+      fixedInputs: [
+        { id:'gauge',  label:'گیج دستگاه (۱/اینچ)', type:'select', options: GAUGE_OPTIONS },
+        { id:'weight', label:'وزن درخواستی (گرم/مترمربع)' },
+        { id:'den',    label:'نمره نخ (دنیر)' },
+      ],
+      range: {
+        id: 'pile',
+        label: 'بازه تغییرات ارتفاع پایل (میلی‌متر)',
+        defaultMin: 6, defaultMax: 12, defaultStep: 1
+      },
+      calc: (f, pile) => {
+        const A = (1/f.gauge) * (1000/25.4) * 10 * 0.001 * (f.den/9000);
+        return (f.weight - 200*A) / (2*A*pile);
+      }
     },
   ]},
 ];

@@ -76,6 +76,8 @@ function select(btn, catTitle, formula) {
 
   if (formula.type === 'converter') {
     renderConverter(catTitle, formula);
+  } else if (formula.type === 'range') {
+    renderRangeCard(catTitle, formula);
   } else {
     renderCard(catTitle, formula);
   }
@@ -239,6 +241,156 @@ function calculateConversion() {
 
   void tblWrap.offsetWidth;
   tblWrap.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER RANGE CARD
+//  Fixed inputs (numbers/selects) + one range input
+//  (min/max/step) → a results table with one row per
+//  step across the range. Used by the tufting reverse
+//  calculators, but works generically for any formula
+//  needing "solve across a range."
+// ═══════════════════════════════════════════════
+function renderRangeCard(catTitle, formula) {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'f-card';
+
+  const r = formula.range;
+
+  card.innerHTML = `
+    <span class="f-tag">${catTitle}</span>
+    <h1 class="f-title">${formula.title}</h1>
+    ${formula.fixedInputs.map(inp => `
+      <div class="inp-row">
+        <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+        ${inp.type === 'select'
+          ? `<select class="inp" id="${inp.id}">
+               ${inp.options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+             </select>`
+          : `<input class="inp" id="${inp.id}" type="number" step="any"
+                     placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
+        }
+      </div>
+    `).join('')}
+
+    <div class="inp-row">
+      <label class="inp-lbl">${r.label}</label>
+      <div class="range-row">
+        <div class="range-field">
+          <span class="range-field-lbl">از</span>
+          <input class="inp" id="range-min" type="number" step="any" value="${r.defaultMin}">
+        </div>
+        <div class="range-field">
+          <span class="range-field-lbl">تا</span>
+          <input class="inp" id="range-max" type="number" step="any" value="${r.defaultMax}">
+        </div>
+        <div class="range-field">
+          <span class="range-field-lbl">گام</span>
+          <input class="inp" id="range-step" type="number" step="any" value="${r.defaultStep}">
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" id="range-calc-btn">محاسبه</button>
+    <p class="err-msg" id="range-err-msg">لطفاً تمام مقادیر را با عدد معتبر وارد کنید.</p>
+    <div class="conv-table-wrap" id="range-table-wrap">
+      <table class="conv-table">
+        <thead>
+          <tr><th>${r.label.split('(')[0].trim()}</th><th>${formula.unit}</th></tr>
+        </thead>
+        <tbody id="range-table-body"></tbody>
+      </table>
+    </div>
+  `;
+
+  main.appendChild(card);
+
+  document.getElementById('range-calc-btn').addEventListener('click', () => calculateRange(formula));
+  card.querySelectorAll('.inp').forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') calculateRange(formula); });
+  });
+
+  setTimeout(() => {
+    const first = card.querySelector('.inp');
+    if (first) first.focus();
+  }, 40);
+}
+
+// ═══════════════════════════════════════════════
+//  CALCULATE RANGE
+// ═══════════════════════════════════════════════
+function calculateRange(formula) {
+  const errMsg  = document.getElementById('range-err-msg');
+  const tblWrap = document.getElementById('range-table-wrap');
+  const tbody   = document.getElementById('range-table-body');
+
+  errMsg.classList.remove('show');
+  tblWrap.classList.remove('show');
+
+  // Collect + validate fixed inputs (same pattern as calculate())
+  const fixed = {};
+  let valid = true;
+  formula.fixedInputs.forEach(inp => {
+    const el  = document.getElementById(inp.id);
+    const raw = el.value.trim();
+    let num;
+    if (raw === '' && inp.default !== undefined) {
+      num = inp.default;
+    } else {
+      num = parseFloat(el.value);
+    }
+    if (isNaN(num)) {
+      el.classList.add('err');
+      valid = false;
+    } else {
+      el.classList.remove('err');
+      fixed[inp.id] = num;
+    }
+  });
+
+  // Collect + validate range inputs
+  const minEl  = document.getElementById('range-min');
+  const maxEl  = document.getElementById('range-max');
+  const stepEl = document.getElementById('range-step');
+
+  const min  = parseFloat(minEl.value);
+  const max  = parseFloat(maxEl.value);
+  const step = parseFloat(stepEl.value);
+
+  [minEl, maxEl, stepEl].forEach(el => el.classList.remove('err'));
+
+  if (isNaN(min) || isNaN(max) || isNaN(step) || step <= 0 || max < min) {
+    [minEl, maxEl, stepEl].forEach(el => el.classList.add('err'));
+    valid = false;
+  }
+
+  if (!valid) { errMsg.classList.add('show'); return; }
+
+  try {
+    tbody.innerHTML = '';
+    const steps = Math.round((max - min) / step); // avoids float drift from repeated addition
+
+    for (let i = 0; i <= steps; i++) {
+      const x = min + (i * step);
+      const result = formula.calc(fixed, x);
+      if (!isFinite(result)) throw new Error('non-finite');
+
+      const display = Number.isInteger(result) ? result.toString() : result.toFixed(2);
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${x}</td><td>${display}</td>`;
+      tbody.appendChild(row);
+    }
+
+    void tblWrap.offsetWidth;
+    tblWrap.classList.add('show');
+
+  } catch {
+    errMsg.textContent = 'خطا در محاسبه — مقادیر وارد شده را بررسی کنید.';
+    errMsg.classList.add('show');
+  }
 }
 
 // ═══════════════════════════════════════════════
