@@ -105,12 +105,41 @@ html, body {
   font-weight: 700;
   letter-spacing: 1.1px;
   color: var(--amber);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 6px;
+  transition: background .1s;
+}
+.cat-head:hover {
+  background: var(--s-hover);
 }
 .cat-head::after {
   content: '';
   flex: 1;
   height: 1px;
   background: rgba(255,255,255,.07);
+}
+
+/* Chevron toggle icon */
+.cat-chevron {
+  display: inline-block;
+  font-size: 9px;
+  line-height: 1;
+  transition: transform .18s ease;
+  color: var(--amber);
+}
+.cat-sec.collapsed .cat-chevron {
+  transform: rotate(-90deg);
+}
+
+/* Collapsible body — smooth slide open/close */
+.cat-body {
+  overflow: hidden;
+  max-height: 1000px;
+  transition: max-height .25s ease;
+}
+.cat-sec.collapsed .cat-body {
+  max-height: 0;
 }
 
 /* Formula buttons */

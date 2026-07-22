@@ -38,20 +38,30 @@ function buildNav() {
   DATA.forEach((cat, ci) => {
     const sec = document.createElement('div');
     sec.className = 'cat-sec';
+    if (ci !== 0) sec.classList.add('collapsed'); // only the first category starts open
 
     const head = document.createElement('div');
     head.className = 'cat-head';
-    head.textContent = cat.title;
+    // head.textContent = cat.title;
+    head.innerHTML = `<span class="cat-chevron">▾</span><span class="cat-head-text">${cat.title}</span>`;
+    head.addEventListener('click', () => {
+      sec.classList.toggle('collapsed');
+    });
     sec.appendChild(head);
+
+    const body = document.createElement('div');
+    body.className = 'cat-body';
 
     cat.formulas.forEach((f, fi) => {
       const btn = document.createElement('button');
       btn.className = 'f-btn';
       btn.textContent = f.title;
       btn.addEventListener('click', () => select(btn, ci, fi));
-      sec.appendChild(btn);
+      // sec.appendChild(btn);
+      body.appendChild(btn);
     });
 
+    sec.appendChild(body);
     nav.appendChild(sec);
   });
 }
@@ -158,8 +168,8 @@ function calculate() {
     let num;
     if (raw === '' && inp.default !== undefined) {
       num = inp.default;
-    } else if (inp.type === 'fraction') {
-      num = parseFraction(el.value);
+    // } else if (inp.type === 'fraction') {    // Accept fraction from entry
+    //   num = parseFraction(el.value);
     } else {
       num = parseFloat(el.value);
     }
