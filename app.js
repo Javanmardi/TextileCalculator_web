@@ -78,6 +78,8 @@ function select(btn, catTitle, formula) {
     renderConverter(catTitle, formula);
   } else if (formula.type === 'range') {
     renderRangeCard(catTitle, formula);
+  } else if (formula.type === 'multi') {
+    renderMultiCard(catTitle, formula);
   } else {
     renderCard(catTitle, formula);
   }
@@ -367,6 +369,115 @@ function calculateRange(formula) {
       row.innerHTML = `<td>${x}</td><td>${display}</td>`;
       tbody.appendChild(row);
     }
+
+    void tblWrap.offsetWidth;
+    tblWrap.classList.add('show');
+
+  } catch {
+    errMsg.textContent = 'خطا در محاسبه — مقادیر وارد شده را بررسی کنید.';
+    errMsg.classList.add('show');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER MULTI-RESULT CARD
+//  Same fixed inputs as a normal formula card, but
+//  instead of one calc/unit pair, the formula defines
+//  a `results` array — each with its own label, unit,
+//  and calc — all shown together in one results table.
+// ═══════════════════════════════════════════════
+function renderMultiCard(catTitle, formula) {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'f-card';
+
+  card.innerHTML = `
+    <span class="f-tag">${catTitle}</span>
+    <h1 class="f-title">${formula.title}</h1>
+    ${formula.inputs.map(inp => `
+      <div class="inp-row">
+        <label class="inp-lbl" for="${inp.id}">${inp.label}</label>
+        ${inp.type === 'select'
+          ? `<select class="inp" id="${inp.id}">
+               ${inp.options.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+             </select>`
+          : `<input class="inp" id="${inp.id}" type="number" step="any"
+                     placeholder="${inp.placeholder || '0'}" autocomplete="off" inputmode="decimal">`
+        }
+      </div>
+    `).join('')}
+    <button class="calc-btn" id="multi-calc-btn">محاسبه</button>
+    <p class="err-msg" id="multi-err-msg">لطفاً تمام مقادیر را با عدد وارد کنید.</p>
+    <div class="conv-table-wrap" id="multi-table-wrap">
+      <table class="conv-table">
+        <thead>
+          <tr><th>خروجی</th><th>مقدار</th></tr>
+        </thead>
+        <tbody id="multi-table-body"></tbody>
+      </table>
+    </div>
+  `;
+
+  main.appendChild(card);
+
+  document.getElementById('multi-calc-btn').addEventListener('click', () => calculateMulti(formula));
+  card.querySelectorAll('.inp').forEach(inp => {
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') calculateMulti(formula); });
+  });
+
+  setTimeout(() => {
+    const first = card.querySelector('.inp');
+    if (first) first.focus();
+  }, 40);
+}
+
+// ═══════════════════════════════════════════════
+//  CALCULATE MULTI-RESULT
+// ═══════════════════════════════════════════════
+function calculateMulti(formula) {
+  const errMsg  = document.getElementById('multi-err-msg');
+  const tblWrap = document.getElementById('multi-table-wrap');
+  const tbody   = document.getElementById('multi-table-body');
+
+  errMsg.classList.remove('show');
+  tblWrap.classList.remove('show');
+
+  // Collect + validate inputs (same pattern as calculate())
+  const vals = {};
+  let valid = true;
+  formula.inputs.forEach(inp => {
+    const el  = document.getElementById(inp.id);
+    const raw = el.value.trim();
+    let num;
+    if (raw === '' && inp.default !== undefined) {
+      num = inp.default;
+    } else {
+      num = parseFloat(el.value);
+    }
+    if (isNaN(num)) {
+      el.classList.add('err');
+      valid = false;
+    } else {
+      el.classList.remove('err');
+      vals[inp.id] = num;
+    }
+  });
+
+  if (!valid) { errMsg.classList.add('show'); return; }
+
+  try {
+    tbody.innerHTML = '';
+    formula.results.forEach(r => {
+      const result = r.calc(vals);
+      if (!isFinite(result)) throw new Error('non-finite');
+
+      const display = Number.isInteger(result) ? result.toString() : result.toFixed(2);
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${r.label}</td><td>${display} ${r.unit}</td>`;
+      tbody.appendChild(row);
+    });
 
     void tblWrap.offsetWidth;
     tblWrap.classList.add('show');
