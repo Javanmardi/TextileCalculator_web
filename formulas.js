@@ -48,7 +48,7 @@ const DATA = [
       unit: 'کیلوگرم',
       inputs: [
         { id:'mp',  label:'درصد مستربچ' },
-        { id:'chw', label:'وزن چیپس' },
+        { id:'chw', label:'وزن چیپس (کیلوگرم)' },
         { id:'op',  label:'درصد روغن' },
       ],
       calc: v => v.chw + ((v.mp/100) * v.chw) + ((v.chw/100) + v.op) 
@@ -57,8 +57,8 @@ const DATA = [
     { title: 'تعداد بوبین کامل تئوری',
       unit: 'عدد',
       inputs: [
-        { id:'wtp', label:'وزن تئوری محصول تولیدی' },
-        { id:'wbh', label:'وزن بوبین کامل' },
+        { id:'wtp', label:'وزن تئوری محصول تولیدی (کیلوگرم)' },
+        { id:'wbh', label:'وزن بوبین کامل (کیلوگرم)' },
       ],
       calc: v => v.wtp / v.wbh
     },
@@ -66,8 +66,8 @@ const DATA = [
     { title: 'وزن ضایعات کل',
       unit: 'کیلوگرم',
       inputs: [
-        { id:'cs',  label:'ضایعات ثابت' },
-        { id:'lsw', label:'وزن ضایعات خط' },
+        { id:'cs',  label:'ضایعات ثابت (کیلوگرم)' },
+        { id:'lsw', label:'وزن ضایعات خط (کیلوگرم)' },
       ],
       calc: v => v.cs + v.lsw
     },
@@ -75,8 +75,8 @@ const DATA = [
     { title: 'راندمان تولید',
       unit: '%',
       inputs: [
-        { id:'wap', label:'وزن محصول نهایی واقعی' },
-        { id:'wta', label:'وزن تئوری تولید در زمان فعالیت' },
+        { id:'wap', label:'وزن محصول نهایی واقعی (کیلوگرم)' },
+        { id:'wta', label:'وزن تئوری تولید در زمان فعالیت (کیلوگرم)' },
       ],
       calc: v => (v.wap / v.wta) * 100
     },
@@ -171,7 +171,7 @@ const DATA = [
       unit: 'گرم/متر',
       inputs: [
         { id:'wwv', label:'عرض' },
-        { id:'wrc', label:'وزن گرد بر' },
+        { id:'wrc', label:'وزن گرد بر (گرم)' },
       ],
       calc: v => v.wrc * v.wwv
     },
