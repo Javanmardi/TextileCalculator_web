@@ -35,7 +35,7 @@ let current = null;
 // ═══════════════════════════════════════════════
 function buildNav() {
   const nav = document.getElementById('nav');
-  const sections = [UNIT_CONVERTER_NAV, ...DATA]; // converter first, then formula categories
+  const sections = [UNIT_CONVERTER_NAV, ...DATA, ABOUT_NAV]; // converter first, then formula categories
 
   sections.forEach((cat, ci) => {
     const sec = document.createElement('div');
@@ -80,6 +80,8 @@ function select(btn, catTitle, formula) {
     renderRangeCard(catTitle, formula);
   } else if (formula.type === 'multi') {
     renderMultiCard(catTitle, formula);
+  } else if (formula.type === 'about') {
+    renderAbout(catTitle, formula);
   } else {
     renderCard(catTitle, formula);
   }
@@ -431,6 +433,22 @@ function renderMultiCard(catTitle, formula) {
     const first = card.querySelector('.inp');
     if (first) first.focus();
   }, 40);
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER ABOUT CARD
+// ═══════════════════════════════════════════════
+function renderAbout(catTitle, formula) {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'f-card';
+  card.innerHTML = `
+    <span class="f-tag">${catTitle}</span>
+    <h1 class="f-title">${formula.title}</h1>
+    ${formula.content}
+  `;
+  main.appendChild(card);
 }
 
 // ═══════════════════════════════════════════════
