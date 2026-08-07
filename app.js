@@ -592,6 +592,49 @@ hamburger.addEventListener('click', toggleDrawer);
 overlay.addEventListener('click', closeDrawer);
 
 // ═══════════════════════════════════════════════
+//  ANDROID "PRESS BACK TWICE TO EXIT"
+//  Seeds one extra history entry so the first back
+//  press is intercepted instead of leaving the app.
+//  Works identically in the installed PWA and in a
+//  regular mobile browser tab, since both respond to
+//  the same History API mechanism. Only active on
+//  mobile widths — desktop back-button behavior is
+//  left untouched.
+// ═══════════════════════════════════════════════
+if (window.innerWidth <= 720) {
+  let backPressedOnce = false;
+  let backPressTimer  = null;
+
+  history.pushState(null, '', location.href); // seed the trap
+
+  window.addEventListener('popstate', () => {
+    if (backPressedOnce) {
+      return; // second press within the window — let the exit proceed
+    }
+    backPressedOnce = true;
+    showExitToast();
+    history.pushState(null, '', location.href); // re-arm the trap
+
+    clearTimeout(backPressTimer);
+    backPressTimer = setTimeout(() => { backPressedOnce = false; }, 2000);
+  });
+}
+
+function showExitToast() {
+  let toast = document.getElementById('exit-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'exit-toast';
+    toast.className = 'exit-toast';
+    toast.textContent = 'برای خروج، دوباره دکمه برگشت را بزنید';
+    document.body.appendChild(toast);
+  }
+  toast.classList.add('show');
+  clearTimeout(showExitToast._hideTimer);
+  showExitToast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════
 buildNav();
