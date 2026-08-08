@@ -430,7 +430,28 @@ select.inp {
    Shares .hamburger's span-morph animation via the
    shared class — only position/size/color differ here.
 ═══════════════════════════════════════════ */
-
+.fab-menu {
+  top: auto;
+  right: auto;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 6px 20px rgba(193,120,38,.45), 0 2px 8px rgba(0,0,0,.25);
+  opacity: 1;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.fab-menu.dismissed {
+  opacity: 0;
+  transform: translateX(-50%) scale(.7);
+  pointer-events: none;
+}
+.fab-menu span {
+  width: 24px;
+}
 
 /* Toast shown on first back-press, prompting a second press to exit */
 .exit-toast {

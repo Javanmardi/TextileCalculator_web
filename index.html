@@ -44,7 +44,7 @@
     "name": "گروه پارسیانیک",
     "url": "http://www.parsianik.com/"
   },
-  "softwareVersion": "0.4.5",
+  "softwareVersion": "0.4.6",
   "featureList": [
     "محاسبه تولید ذوب‌ریسی",
     "محاسبه تکسچره",
@@ -109,8 +109,13 @@
 
 <div class="app">
 
-  <!-- Mobile-only: hamburger toggle -->
+  <!-- Mobile-only: hamburger toggle (top-right, compact) -->
   <button class="hamburger" id="hamburger" aria-label="باز کردن منو">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Mobile-only: big floating menu button (bottom-center, hard to miss) -->
+  <button class="hamburger fab-menu" id="fabMenu" aria-label="باز کردن منو">
     <span></span><span></span><span></span>
   </button>
 
@@ -134,7 +139,7 @@
         </div>
         <div>
           <div class="brand-name">ماشین حساب نساجی</div>
-          <div class="brand-sub">نسخه 0.4.5 - کاری از گروه <a href="http://www.parsianik.com/" style="color:var(--amber);">پارسیانیک</a></div>
+          <div class="brand-sub">نسخه 0.4.6 - کاری از گروه <a href="http://www.parsianik.com/" style="color:var(--amber);">پارسیانیک</a></div>
         </div>
       </div>
     </div>

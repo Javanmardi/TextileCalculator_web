@@ -571,6 +571,7 @@ function calculate() {
 //  MOBILE DRAWER (hamburger menu)
 // ═══════════════════════════════════════════════
 const hamburger = document.getElementById('hamburger');
+const fabMenu   = document.getElementById('fabMenu');
 const sidebar   = document.getElementById('sidebar');
 const overlay   = document.getElementById('overlay');
 
@@ -578,17 +579,38 @@ function openDrawer() {
   sidebar.classList.add('open');
   overlay.classList.add('show');
   hamburger.classList.add('open');
+  fabMenu.classList.add('open');
+  dismissFabIfNeeded();
 }
 function closeDrawer() {
   sidebar.classList.remove('open');
   overlay.classList.remove('show');
   hamburger.classList.remove('open');
+  fabMenu.classList.remove('open');
 }
 function toggleDrawer() {
   sidebar.classList.contains('open') ? closeDrawer() : openDrawer();
 }
 
+// ═══════════════════════════════════════════════
+//  FAB FIRST-USE FADE
+//  Shows on every fresh visit (sessionStorage clears
+//  when the tab/app closes), but disappears for the
+//  rest of the current visit once the menu is opened.
+// ═══════════════════════════════════════════════
+function dismissFabIfNeeded() {
+  if (sessionStorage.getItem('fabDismissed')) return;
+  sessionStorage.setItem('fabDismissed', '1');
+  fabMenu.classList.add('dismissed');
+}
+
+// If the page reloads mid-session (already dismissed earlier), keep it hidden
+if (sessionStorage.getItem('fabDismissed')) {
+  fabMenu.classList.add('dismissed');
+}
+
 hamburger.addEventListener('click', toggleDrawer);
+fabMenu.addEventListener('click', toggleDrawer);
 overlay.addEventListener('click', closeDrawer);
 
 // ═══════════════════════════════════════════════
