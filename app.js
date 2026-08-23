@@ -30,6 +30,16 @@ document.getElementById('install-dismiss')?.addEventListener('click', () => {
 // ═══════════════════════════════════════════════
 let current = null;
 
+// Captured once at load, before any formula/converter overwrites #main —
+// lets the back button restore the exact original welcome screen later.
+const WELCOME_HTML = document.getElementById('main').innerHTML;
+
+function showWelcome() {
+  document.getElementById('main').innerHTML = WELCOME_HTML;
+  current = null;
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+}
+
 // ═══════════════════════════════════════════════
 //  BUILD SIDEBAR NAV
 // ═══════════════════════════════════════════════
@@ -614,14 +624,15 @@ fabMenu.addEventListener('click', toggleDrawer);
 overlay.addEventListener('click', closeDrawer);
 
 // ═══════════════════════════════════════════════
-//  ANDROID "PRESS BACK TWICE TO EXIT"
-//  Seeds one extra history entry so the first back
-//  press is intercepted instead of leaving the app.
+//  ANDROID BACK BUTTON — multi-level navigation
+//  1. Menu open?        → close it.
+//  2. A tool is open?    → return to the welcome screen.
+//  3. On welcome screen? → require a second press to exit.
+//  Seeds one extra history entry so back is always
+//  intercepted first, rather than leaving the app.
 //  Works identically in the installed PWA and in a
-//  regular mobile browser tab, since both respond to
-//  the same History API mechanism. Only active on
-//  mobile widths — desktop back-button behavior is
-//  left untouched.
+//  regular mobile browser tab. Only active on mobile
+//  widths — desktop back-button behavior is untouched.
 // ═══════════════════════════════════════════════
 if (window.innerWidth <= 720) {
   let backPressedOnce = false;
@@ -630,6 +641,21 @@ if (window.innerWidth <= 720) {
   history.pushState(null, '', location.href); // seed the trap
 
   window.addEventListener('popstate', () => {
+    // Level 1 — menu is open: close it
+    if (sidebar.classList.contains('open')) {
+      closeDrawer();
+      history.pushState(null, '', location.href); // re-arm the trap
+      return;
+    }
+
+    // Level 2 — a formula/tool is open: return to the welcome screen
+    if (current !== null) {
+      showWelcome();
+      history.pushState(null, '', location.href); // re-arm the trap
+      return;
+    }
+
+    // Level 3 — already on welcome screen: double-press to exit
     if (backPressedOnce) {
       return; // second press within the window — let the exit proceed
     }
