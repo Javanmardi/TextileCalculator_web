@@ -640,18 +640,29 @@ if (window.innerWidth <= 720) {
 
   history.pushState(null, '', location.href); // seed the trap
 
+  // Re-arming synchronously inside a popstate handler is unreliable on
+  // several Android browsers/WebViews — the pushState can be silently
+  // dropped, so the *next* physical back press slips past whatever level
+  // should have caught it and exits instead. Deferring by one tick fixes
+  // this reliably (well-documented workaround for this exact issue).
+  function rearmBackTrap() {
+    setTimeout(() => {
+      history.pushState(null, '', location.href);
+    }, 0);
+  }
+
   window.addEventListener('popstate', () => {
     // Level 1 — menu is open: close it
     if (sidebar.classList.contains('open')) {
       closeDrawer();
-      history.pushState(null, '', location.href); // re-arm the trap
+      rearmBackTrap();
       return;
     }
 
     // Level 2 — a formula/tool is open: return to the welcome screen
     if (current !== null) {
       showWelcome();
-      history.pushState(null, '', location.href); // re-arm the trap
+      rearmBackTrap();
       return;
     }
 
@@ -661,7 +672,7 @@ if (window.innerWidth <= 720) {
     }
     backPressedOnce = true;
     showExitToast();
-    history.pushState(null, '', location.href); // re-arm the trap
+    rearmBackTrap();
 
     clearTimeout(backPressTimer);
     backPressTimer = setTimeout(() => { backPressedOnce = false; }, 2000);
