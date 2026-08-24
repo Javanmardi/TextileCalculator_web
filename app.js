@@ -637,32 +637,43 @@ overlay.addEventListener('click', closeDrawer);
 if (window.innerWidth <= 720) {
   let backPressedOnce = false;
   let backPressTimer  = null;
+  let trapCounter     = 0;
 
-  history.pushState(null, '', location.href); // seed the trap
-
-  // Re-arming synchronously inside a popstate handler is unreliable on
-  // several Android browsers/WebViews — the pushState can be silently
-  // dropped, so the *next* physical back press slips past whatever level
-  // should have caught it and exits instead. Deferring by one tick fixes
-  // this reliably (well-documented workaround for this exact issue).
-  function rearmBackTrap() {
+  // Two separate Chromium quirks can break this pattern if only one is
+  // fixed: (1) pushState() called synchronously inside a popstate handler
+  // can be silently dropped on some Android WebView/Chrome builds, and
+  // (2) repeated pushState() calls to the EXACT SAME URL can be treated
+  // as duplicates and ignored outright — this second one is the actual
+  // cause here, confirmed by it failing identically on Chrome and Brave
+  // (both Chromium) across two Android generations. Fixing both: defer
+  // the call by one tick, and give each entry a distinct hash fragment
+  // so it can never be mistaken for a repeat of the current page.
+  function pushTrapEntry() {
     setTimeout(() => {
-      history.pushState(null, '', location.href);
+      trapCounter++;
+      const base = location.pathname + location.search;
+      history.pushState({ trap: trapCounter }, '', base + '#nav' + trapCounter);
     }, 0);
   }
+
+  trapCounter++;
+  history.pushState(
+    { trap: trapCounter }, '',
+    location.pathname + location.search + '#nav' + trapCounter
+  ); // seed the trap (runs at normal script-load time, not inside a handler)
 
   window.addEventListener('popstate', () => {
     // Level 1 — menu is open: close it
     if (sidebar.classList.contains('open')) {
       closeDrawer();
-      rearmBackTrap();
+      pushTrapEntry();
       return;
     }
 
     // Level 2 — a formula/tool is open: return to the welcome screen
     if (current !== null) {
       showWelcome();
-      rearmBackTrap();
+      pushTrapEntry();
       return;
     }
 
@@ -672,7 +683,7 @@ if (window.innerWidth <= 720) {
     }
     backPressedOnce = true;
     showExitToast();
-    rearmBackTrap();
+    pushTrapEntry();
 
     clearTimeout(backPressTimer);
     backPressTimer = setTimeout(() => { backPressedOnce = false; }, 2000);
