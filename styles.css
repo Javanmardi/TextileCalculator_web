@@ -464,16 +464,17 @@ select.inp {
   opacity: 0;
   transition: opacity .22s ease;
 }
-.overlay.show {
-  display: block;
-  opacity: 1;
-}
 
 /* ═══════════════════════════════════════════
    RESPONSIVE — narrow screens (drawer menu)
 ═══════════════════════════════════════════ */
 @media (max-width: 720px) {
   .hamburger { display: flex; }
+
+  .overlay.show {
+    display: block;
+    opacity: 1;
+  }
 
   .app {
     height: 100vh;

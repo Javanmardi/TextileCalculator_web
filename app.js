@@ -606,12 +606,20 @@ overlay.addEventListener('click', closeDrawer);
 //  Delegated on #main (which itself is never replaced —
 //  only its innerHTML is) so the listener keeps working
 //  even after showWelcome() rebuilds the welcome markup
-//  from scratch. preventDefault stops the href="#" from
-//  creating its own history entry, which would otherwise
-//  interfere with the back-button trap below.
+//  from scratch. Since the link has role="link" and
+//  tabindex="0" but no href (to avoid the browser's
+//  status-bar preview), Enter doesn't activate it
+//  automatically the way a real <a href> would — the
+//  keydown listener below restores that behavior.
 // ═══════════════════════════════════════════════
 document.getElementById('main').addEventListener('click', (e) => {
   if (e.target.closest('#openMenuLink')) {
+    toggleDrawer();
+  }
+});
+
+document.getElementById('main').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.closest('#openMenuLink')) {
     e.preventDefault();
     toggleDrawer();
   }
