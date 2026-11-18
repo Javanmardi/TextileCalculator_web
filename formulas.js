@@ -13,10 +13,46 @@ const GAUGE_OPTIONS = [
   { label:'۵/۸',  value: 5/8 },
 ];
 
+const YARN_TYPE = [
+  { label:'پلی‌استر', value: 1.38 },
+  { label:'پلی‌پروپیلن', value: 0.91 },
+  { label:'نایلون ۶',  value: 1.13 },
+  { label:'نایلون ۶۶', value: 1.15 },
+  { label:'پلی‌اتیلن', value: 0.93 },
+  { label:'اکریلیک', value: 1.17 },
+  { label:'شیشه E',  value: 2.58 },
+];
+
 // ═══════════════════════════════════════════════
 //  FORMULA DATA
 // ═══════════════════════════════════════════════
 const DATA = [
+
+  /* ── مبدل قطر و نمره ── */
+  { title: 'تبدیل قطر و نمره', formulas: [
+
+    { title: 'محاسبه نمره از قطر',
+      type: 'multi',
+      inputs: [
+        { id:'dm',  label:'قطر (میکرومتر)' },
+        { id:'tp', label:'جنس نخ', type:'select', options: YARN_TYPE },
+      ],
+      results: [
+        { label: 'نمره به تکس', unit: 'Tex',     calc: tex => 0.0007854 * (tex.dm **2) * tex.tp },
+        { label: 'نمره به دی‌تکس', unit: 'dTex',  calc: dtex => 0.007854 * (dtex.dm **2) * dtex.tp },
+        { label: 'نمره دنیر',  unit: 'den',      calc: den => 0.0070686 * (den.dm **2) * den.tp },
+      ]
+    },
+
+    { title: 'محاسبه قطر از نمره',
+      unit: 'میکرومتر',
+      inputs: [
+        { id:'tex',  label:'نمره (تکس)' },
+        { id:'tp', label:'جنس نخ', type:'select', options: YARN_TYPE },
+      ],
+      calc: dm => 3.568 * ((dm.tex / dm.tp) ** 2)
+    },
+  ]},
 
   /* ── ذوب ریسی ── */
   { title: 'ذوب ریسی', formulas: [
