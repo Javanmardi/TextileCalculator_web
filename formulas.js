@@ -44,13 +44,31 @@ const DATA = [
       ]
     },
 
-    { title: 'محاسبه قطر از نمره',
+    { title: 'محاسبه قطر از نمره تکس',
       unit: 'میکرومتر',
       inputs: [
         { id:'tex',  label:'نمره (تکس)' },
         { id:'tp', label:'جنس نخ', type:'select', options: YARN_TYPE },
       ],
-      calc: dm => 3.568 * ((dm.tex / dm.tp) ** 2)
+      calc: dm => 35.68 * ((dm.tex / dm.tp) ** 0.5)
+    },
+
+    { title: 'محاسبه قطر از نمره دی‌تکس',
+      unit: 'میکرومتر',
+      inputs: [
+        { id:'dtex',  label:'نمره (دی‌تکس)' },
+        { id:'tp', label:'جنس نخ', type:'select', options: YARN_TYPE },
+      ],
+      calc: dm => 11.283 * ((dm.dtex / dm.tp) ** 0.5)
+    },
+
+    { title: 'محاسبه قطر از نمره دنیر',
+      unit: 'میکرومتر',
+      inputs: [
+        { id:'den',  label:'نمره (دنیر)' },
+        { id:'tp', label:'جنس نخ', type:'select', options: YARN_TYPE },
+      ],
+      calc: dm => 11.894 * ((dm.den / dm.tp) ** 0.5)
     },
   ]},
 
